@@ -34,6 +34,14 @@ app.MapGet($"/test", (int id) =>
         : Results.NotFound("Inga poster");
 });
 
+app.MapGet($"/testtext", (int id) =>
+{
+    var viewModel = ViewModelData.Items.FirstOrDefault(x => x.Id == id);
+    return viewModel is not null
+        ? Results.Text($"Namn: {viewModel.Name} - Beskrivning: {viewModel.Description}")
+        : Results.NotFound("Inga poster");
+});
+
 
 app.MapPut($"/test", (ViewModel model) =>
 {
