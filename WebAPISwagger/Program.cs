@@ -1,3 +1,5 @@
+using WebAPISwagger;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Register services to the container.
@@ -19,18 +21,38 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/", () => {
-    return new string[] {
-        "Hello World!",
-        "This is a simple Web API with Swagger documentation."
-    };
+app.MapGet($"/testall", () =>
+{
+    return ViewModelData.Items;
 });
 
-//app.UseHttpsRedirection();
+app.MapGet($"/test", (int id) =>
+{
+    var viewModel = ViewModelData.Items.FirstOrDefault(x => x.Id == id);
+    return viewModel is not null
+        ? Results.Ok($"Namn: {viewModel.Name} - Beskrivning: {viewModel.Description}")
+        : Results.NotFound("Inga poster");
+});
 
-//app.UseAuthorization();
 
-//app.MapControllers();
+app.MapPut($"/test", (ViewModel model) =>
+{
+    var existingItem = ViewModelData.Items.FirstOrDefault(x => x.Id == model.Id);
+    if (existingItem != null)
+    {
+        existingItem.Name = model.Name;
+        existingItem.Description = model.Description;
+        return Results.Ok(existingItem);
+    }
+    return Results.NotFound();
+});
+
+//app.MapGet("/", () => {
+//    return new string[] {
+//        "Hello World!",
+//        "This is a simple Web API with Swagger documentation."
+//    };
+//});
 
 // Run the application.
 app.Run();
