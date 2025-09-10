@@ -2,7 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Register services to the container.
 
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -19,10 +19,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.MapGet("/", () => {
+    return new string[] {
+        "Hello World!",
+        "This is a simple Web API with Swagger documentation."
+    };
+});
 
-app.UseAuthorization();
+//app.UseHttpsRedirection();
 
-app.MapControllers();
+//app.UseAuthorization();
 
+//app.MapControllers();
+
+// Run the application.
 app.Run();
